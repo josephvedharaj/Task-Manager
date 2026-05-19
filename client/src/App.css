@@ -1,0 +1,9 @@
+* {
+    user-select: none;
+    scrollbar-width: none;
+}
+
+button, select, option {
+    cursor: pointer;
+}
+
