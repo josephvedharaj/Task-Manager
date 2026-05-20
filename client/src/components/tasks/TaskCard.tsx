@@ -13,7 +13,7 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
       <p className="text-gray-600 mt-2 whitespace-pre-wrap">{task.description}</p>
 
       <div className="mt-auto">
-        <span className={`inline-block mt-4 text-sm px-3 py-1 rounded-full text-gray
+        <span className={`inline-block mt-4 mr-1 text-sm px-3 py-1 rounded-full text-gray
           ${task.status === "completed" ? "bg-green-200" : (task.status === "in-progress" ? "bg-yellow-200" : "bg-red-200")}
         `}>
           {task.status}
