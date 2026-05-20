@@ -9,7 +9,16 @@ import notFound from "./middleware/notFoundMiddleware"
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+
+    "https://task-manager-omega-nine-74.vercel.app",
+    "https://task-manager-git-main-josephvedharajs-projects.vercel.app",
+    "https://task-manager-192g9hudm-josephvedharajs-projects.vercel.app"
+  ],
+  credentials: true
+}))
 
 app.use(express.json())
 
