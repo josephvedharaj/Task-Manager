@@ -20,7 +20,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("")
-  const [sort, setSort] = useState("latest-created")
+  const [sort, setSort] = useState("priority")
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -68,26 +68,14 @@ const DashboardPage = () => {
     try {
       await api.delete(`/tasks/${selectedTaskId}`)
 
-      setTasks((prev) =>
-        prev.filter(
-          (task) =>
-            task._id !== selectedTaskId
-        )
-      )
+      setTasks((prev) => prev.filter((task) => task._id !== selectedTaskId))
 
       setDeleteModalOpen(false)
+
       toast.success("Task deleted successfully")
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to delete task")
     }
-  }
-
-  const handleUpdateTask = (updatedTask: Task) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task._id === updatedTask._id ? updatedTask : task
-      )
-    )
   }
 
   return (
@@ -108,21 +96,10 @@ const DashboardPage = () => {
             onChange={(e: ChangeEvent<HTMLSelectElement>) => setStatusFilter(e.target.value)}
             className="border p-3 rounded-lg"
           >
-            <option value="">
-              All Status
-            </option>
-
-            <option value="pending">
-              Pending
-            </option>
-
-            <option value="in-progress">
-              In Progress
-            </option>
-
-            <option value="completed">
-              Completed
-            </option>
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
           </select>
 
           <select
@@ -130,21 +107,11 @@ const DashboardPage = () => {
             onChange={(e: ChangeEvent<HTMLSelectElement>) => setSort(e.target.value)}
             className="border p-3 rounded-lg"
           >
-            <option value="latest-created">
-              Latest Created
-            </option>
-
-            <option value="oldest-created">
-              Oldest Created
-            </option>
-
-            <option value="latest-updated">
-              Latest Updated
-            </option>
-
-            <option value="oldest-updated">
-              Oldest Updated
-            </option>
+            <option value="priority">Priority</option>
+            <option value="latest-created">Latest Created</option>
+            <option value="oldest-created">Oldest Created</option>
+            <option value="latest-updated">Latest Updated</option>
+            <option value="oldest-updated">Oldest Updated</option>
           </select>
 
           <button
@@ -171,6 +138,7 @@ const DashboardPage = () => {
             ))
           }
         </div>
+        
         {loading && (<Spinner />)}
       </main>
 
@@ -180,7 +148,7 @@ const DashboardPage = () => {
             task={selectedTask}
             isOpen={editModalOpen}
             onClose={() => setEditModalOpen(false)}
-            onUpdate={handleUpdateTask}
+            onUpdate={fetchTasks}
           />
         )
       }

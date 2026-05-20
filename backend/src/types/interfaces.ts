@@ -14,6 +14,7 @@ export interface ITask extends Document {
   title: string
   description: string
   status: status
+  deadline: Date
   user: Types.ObjectId
   createdAt: Date
   updatedAt: Date
@@ -34,12 +35,14 @@ export interface CreateTaskBody {
   title: string
   description: string
   status?: status
+  deadline: Date
 }
 
 export interface UpdateTaskBody {
   title?: string
   description?: string
   status?: status
+  deadline?: Date
 }
 
 export interface JwtPayload {

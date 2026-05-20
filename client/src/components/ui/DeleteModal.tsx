@@ -1,8 +1,4 @@
-interface DeleteModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: () => void
-}
+import type { DeleteModalProps } from "../../types/interfaces"
 
 const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteModalProps) => {
   if (!isOpen) {

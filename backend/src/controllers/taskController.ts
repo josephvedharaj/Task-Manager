@@ -6,12 +6,13 @@ import Task from "../models/Task"
 import { CreateTaskBody, UpdateTaskBody } from "../types/interfaces"
 
 export const createTask = asyncHandler(async (req: Request, res: Response) => {
-    const { title, description, status } = req.body as CreateTaskBody
+    const { title, description, status, deadline } = req.body as CreateTaskBody
 
     const task = await Task.create({
       title,
       description,
       status,
+      deadline,
       user: req.user?._id
     })
 
@@ -20,48 +21,75 @@ export const createTask = asyncHandler(async (req: Request, res: Response) => {
 )
 
 export const getTasks = asyncHandler(async (req: Request, res: Response) => {
-    const search = req.query.search?.toString() || ""
+  const search = req.query.search?.toString() || ""
+  const sort = req.query.sort?.toString() || "latest-created"
+  const status = req.query.status?.toString()
 
-    const sort = req.query.sort?.toString() || "latest-created"
+  const query: any = {
+    user: req.user?._id,
+    title: {
+      $regex: search,
+      $options: "i"
+    }
+  }
 
-    const status = req.query.status?.toString()
+  if (status) {
+    query.status = status
+  }
 
-    const query: any = {
-      user: req.user?._id,
-      title: {
-        $regex: search,
-        $options: "i"
+  let sortOption = {}
+
+  switch (sort) {
+    case "latest-created":
+      sortOption = {
+        createdAt: -1
       }
-    }
+      break
+    
+    case "oldest-created":
+      sortOption = {
+        createdAt: 1
+      }
+      break
 
-    if (status) {
-      query.status = status
-    }
+    case "latest-updated":
+      sortOption = {
+        updatedAt: -1
+      }
+      break
 
-    let sortOption = {}
-
-    switch (sort) {
-      case "oldest-created":
-        sortOption = { createdAt: 1 }
-        break
-
-      case "latest-updated":
-        sortOption = { updatedAt: -1 }
-        break
-
-      case "oldest-updated":
-        sortOption = { updatedAt: 1 }
-        break
-
-      default:
-        sortOption = { createdAt: -1 }
-    }
-
-    const tasks = await Task.find(query).sort(sortOption)
+    case "oldest-updated":
+      sortOption = {
+        updatedAt: 1
+      }
+      break
+    
+    default:
+      const tasks = await Task.aggregate([
+        {$match: query},
+        {
+          $addFields: {
+            completedOrder: {
+              $cond: [{$eq: ["$status", "completed"]}, 1, 0]
+            }
+          }
+        },
+        {
+          $sort: {
+            completedOrder: 1,
+            deadline: 1
+          }
+        }
+      ])
 
     res.json(tasks)
+    return
   }
-)
+
+  const tasks = await Task.find(query).sort(sortOption)
+
+  res.json(tasks)
+})
 
 export const getTaskById = asyncHandler(async (req: Request, res: Response) => {
     const task = await Task.findOne({

@@ -25,6 +25,11 @@ const taskSchema = new Schema<ITask>(
       default: "pending"
     },
 
+    deadline: {
+      type: Date,
+      required: true
+    },
+
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -3,15 +3,7 @@ import toast from "react-hot-toast"
 
 import api from "../api/axios"
 
-import type { User, LoginData, RegisterData, AuthResponse } from "../types/interfaces"
-
-interface AuthContextType {
-  user: User | null
-  loading: boolean
-  login: (data: LoginData) => Promise<void>
-  register: (data: RegisterData) => Promise<void>
-  logout: () => void
-}
+import type { User, AuthContextType, LoginData, RegisterData, AuthResponse } from "../types/interfaces"
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
@@ -45,9 +37,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchUser = async () => {
     try {
       const response = await api.get<User>("/auth/me")
+
       setUser(response.data)
     } catch {
       localStorage.removeItem("token")
+      
       setUser(null)
     } finally {
       setLoading(false)

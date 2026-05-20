@@ -4,20 +4,19 @@ import toast from "react-hot-toast"
 
 import api from "../../api/axios"
 
-import type { CreateTaskData, Task } from "../../types/interfaces"
-
-interface TaskFormProps {
-  onTaskCreated: (task: Task) => void
-}
+import type { CreateTaskData, Task, TaskFormProps } from "../../types/interfaces"
 
 const TaskForm = ({ onTaskCreated }: TaskFormProps) => {
   const [formData, setFormData] = useState<CreateTaskData>({
     title: "",
     description: "",
-    status: "pending"
+    status: "pending",
+    deadline: ""
   })
 
   const [loading, setLoading] = useState(false)
+
+  const today = new Date().toISOString().split("T")[0]
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -39,7 +38,8 @@ const TaskForm = ({ onTaskCreated }: TaskFormProps) => {
       setFormData({
         title: "",
         description: "",
-        status: "pending"
+        status: "pending",
+        deadline: ""
       })
 
       toast.success("Task Added successfully")
@@ -55,7 +55,6 @@ const TaskForm = ({ onTaskCreated }: TaskFormProps) => {
       onSubmit={handleSubmit}
       className="bg-white p-5 rounded-xl shadow space-y-4 mb-6"
     >
-
       <h2 className="text-xl font-bold">Add Task</h2>
 
       <input
@@ -77,6 +76,16 @@ const TaskForm = ({ onTaskCreated }: TaskFormProps) => {
         required
       />
 
+      <input
+        type="date"
+        name="deadline"
+        min={today}
+        value={formData.deadline}
+        onChange={handleChange}
+        className="w-full border p-3 rounded-lg"
+        required
+      />
+
       <select
         name="status"
         value={formData.status}
@@ -85,7 +94,6 @@ const TaskForm = ({ onTaskCreated }: TaskFormProps) => {
       >
         <option value="pending">Pending</option>
         <option value="in-progress">In Progress</option>
-        <option value="completed">Completed</option>
       </select>
 
       <button

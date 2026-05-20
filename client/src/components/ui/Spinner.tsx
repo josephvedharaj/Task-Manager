@@ -1,6 +1,4 @@
-interface SpinnerProps {
-  fullScreen?: boolean
-}
+import type { SpinnerProps } from "../../types/interfaces"
 
 const Spinner = ({ fullScreen = false }: SpinnerProps) => {
   

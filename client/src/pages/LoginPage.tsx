@@ -29,8 +29,11 @@ const LoginPage = () => {
 
     try {
       setLoading(true)
+      
       await login(formData)
+      
       navigate("/")
+      
       toast.success("Logged in successfully")
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Login failed")
