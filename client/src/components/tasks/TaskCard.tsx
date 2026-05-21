@@ -7,7 +7,7 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
   const daysLeft = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24))
 
   return (
-    <div className="bg-white p-5 rounded-xl shadow flex flex-col hover:ring-1 hover:ring-black hover:shadow-lg hover:scale-102 transition-all duration-300">
+    <div className="bg-white p-5 rounded-xl shadow flex flex-col hover:shadow-lg hover:scale-102 transition-all duration-300">
       <h3 className="text-lg font-bold">{task.title}</h3>
 
       <p className="text-gray-600 mt-2 whitespace-pre-wrap">{task.description}</p>
