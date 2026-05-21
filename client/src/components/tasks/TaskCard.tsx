@@ -7,7 +7,7 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
   const daysLeft = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24))
 
   return (
-    <div className="bg-white p-5 rounded-xl shadow flex flex-col">
+    <div className="bg-white p-5 rounded-xl shadow flex flex-col hover:ring-1 hover:ring-black hover:shadow-lg hover:scale-102 transition-all duration-300">
       <h3 className="text-lg font-bold">{task.title}</h3>
 
       <p className="text-gray-600 mt-2 whitespace-pre-wrap">{task.description}</p>
@@ -28,14 +28,14 @@ const TaskCard = ({ task, onDelete, onEdit }: TaskCardProps) => {
         <div className="flex gap-2 mt-4">
           <button
             onClick={() => onEdit(task)}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all duration-300"
           >
             Edit
           </button>
 
           <button
             onClick={() => onDelete(task._id)}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg"
+            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all duration-300"
           >
             Delete
           </button>

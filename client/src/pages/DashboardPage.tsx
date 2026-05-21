@@ -116,7 +116,7 @@ const DashboardPage = () => {
 
           <button
             onClick={() => navigate("/tasks/create")}
-            className="bg-black text-white px-5 py-3 rounded-lg whitespace-nowrap"
+            className="bg-black text-white px-5 py-3 rounded-lg whitespace-nowrap hover:bg-gray-300 hover:text-black transition-all duration-300"
           >
             Add Task
           </button>

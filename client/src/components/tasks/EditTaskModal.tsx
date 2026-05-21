@@ -105,7 +105,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onUpdate }: EditTaskModalProps) 
         <div className="flex justify-end gap-3 mt-6">
           <button
             onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded-lg"
+            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-300"
           >
             Cancel
           </button>
@@ -113,7 +113,7 @@ const EditTaskModal = ({ task, isOpen, onClose, onUpdate }: EditTaskModalProps) 
           <button
             onClick={handleUpdate}
             disabled={loading}
-            className="bg-black text-white px-4 py-2 rounded-lg"
+            className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-300"
           >
             {loading ? "Saving..." : "Save Changes"}
           </button>

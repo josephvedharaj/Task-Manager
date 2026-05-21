@@ -45,7 +45,7 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-4">
-        <h1 className="text--3xl font-bold text-center">Login</h1>
+        <h1 className="text-3xl font-bold text-center">Login</h1>
 
         <input
           type="email"
@@ -70,7 +70,7 @@ const LoginPage = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-black text-white p-3 rounded-lg"
+          className="w-full bg-black text-white p-3 rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-300"
         >
           {loading ? "Loging in..." : "Login"}
         </button>

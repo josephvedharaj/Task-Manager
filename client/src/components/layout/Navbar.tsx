@@ -12,7 +12,7 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-3">
-        <button onClick={logout} className="bg-black text-white px-4 py-2 rounded-lg">Logout</button>
+        <button onClick={logout} className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-300">Logout</button>
       </div>
     </header>
   )

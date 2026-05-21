@@ -16,7 +16,7 @@ const CreateTaskPage = () => {
 
           <button
             onClick={() => navigate("/dashboard")}
-            className="bg-gray-300 px-4 py-2 rounded-lg"
+            className="bg-gray-300 px-4 py-2 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-300"
           >
             Cancel
           </button>

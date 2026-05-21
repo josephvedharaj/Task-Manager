@@ -99,7 +99,7 @@ const TaskForm = ({ onTaskCreated }: TaskFormProps) => {
       <button
         type="submit"
         disabled={loading}
-        className="bg-black text-white px-5 py-3 rounded-lg"
+        className="bg-black text-white px-5 py-3 rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-300"
       >
         {loading ? "Creating..." : "Create Task"}
       </button>
