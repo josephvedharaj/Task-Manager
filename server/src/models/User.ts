@@ -23,6 +23,33 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
       minlength: 6
+    },
+
+    profileImage: {
+      type: String,
+      default: "/uploads/defaultProfileImage.webp"
+    },
+
+    gender: {
+      type: String,
+      enum: [
+        "male",
+        "female",
+        "others",
+        "prefer not to say"
+      ],
+      default: "prefer not to say"
+    },
+
+    dob: {
+      type: Date,
+      default: null
+    },
+
+    phoneNumber: {
+      type: String,
+      trim: true,
+      default: ""
     }
   },
   {
@@ -30,6 +57,9 @@ const userSchema = new Schema<IUser>(
   }
 )
 
-const User = mongoose.model<IUser>("User", userSchema)
+const User = mongoose.model<IUser>(
+  "User",
+  userSchema
+)
 
 export default User

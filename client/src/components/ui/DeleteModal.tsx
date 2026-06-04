@@ -1,9 +1,7 @@
 import type { DeleteModalProps } from "../../types/interfaces"
 
-const DeleteModal = ({ isOpen, onClose, onConfirm }: DeleteModalProps) => {
-  if (!isOpen) {
-    return null
-  }
+const DeleteModal = ({ onClose, onConfirm }: DeleteModalProps) => {
+
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

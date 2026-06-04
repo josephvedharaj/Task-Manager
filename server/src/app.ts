@@ -1,8 +1,10 @@
 import express from "express"
 import cors from "cors"
+import path from "path"
 
 import authRoutes from "./routes/authRoutes"
 import taskRoutes from "./routes/taskRoutes"
+import userRoutes from "./routes/userRoutes"
 
 import errorHandler from "./middleware/errorMiddleware"
 import notFound from "./middleware/notFoundMiddleware"
@@ -22,6 +24,8 @@ app.use(cors({
 
 app.use(express.json())
 
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")))
+
 app.get("/", (req, res) => {
   res.send("Task Manager API Running...")
 })
@@ -29,6 +33,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes)
 
 app.use("/api/tasks", taskRoutes)
+
+app.use("/api/user/", userRoutes)
 
 app.use(notFound)
 

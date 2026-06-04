@@ -16,6 +16,12 @@ const RegisterPage = () => {
     password: ""
   })
 
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    password: false
+  })
+
   const [loading, setLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,12 +34,24 @@ const RegisterPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    const newErrors = {
+      name: !formData.name.trim(),
+      email: !formData.email.trim(),
+      password: !formData.password.trim()
+    }
+
+    setErrors(newErrors)
+
+    if (newErrors.name || newErrors.email || newErrors.password) {
+      return
+    }
+
     try {
       setLoading(true)
 
       await register(formData)
-      
-      navigate("/")
+
+      navigate("/", {replace: true})
 
       toast.success("Account created successfully")
     } catch (error: any) {
@@ -51,46 +69,57 @@ const RegisterPage = () => {
       >
         <h1 className="text-3xl font-bold text-center">Register</h1>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full border p-3 rounded-lg"
-          required
-        />
+        <div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleChange}
+            className={`w-full border p-3 rounded-lg outline-none ${errors.name ? "border-red-500" : ""}`}
+          />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full border p-3 rounded-lg"
-          required
-        />
+          {errors.name && (<p className="text-red-500 text-sm mt-1">This field is required</p>)}
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full border p-3 rounded-lg"
-          required
-        />
+        <div>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className={`w-full border p-3 rounded-lg outline-none ${errors.email ? "border-red-500" : ""}`}
+          />
+
+          {errors.email && (<p className="text-red-500 text-sm mt-1">This field is required</p>)}
+        </div>
+
+        <div>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className={`w-full border p-3 rounded-lg outline-none ${errors.password ? "border-red-500" : ""}`}
+          />
+
+          {errors.password && (<p className="text-red-500 text-sm mt-1">This field is required</p>)}
+        </div>
 
         <button
           type="submit"
           disabled={loading}
           className="w-full bg-black text-white p-3 rounded-lg hover:bg-gray-300 hover:text-black transition-all duration-300"
         >
+
           {loading ? "Loading..." : "Register"}
         </button>
 
         <p className="text-sm text-center">
-          Already have an account?{" "} <Link to="/login" className="text-blue-500">Login</Link>
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-500">Login</Link>
         </p>
       </form>
     </div>

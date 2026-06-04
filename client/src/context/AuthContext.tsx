@@ -27,6 +27,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await fetchUser()
   }
 
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser)
+  }
+
   const logout = () => {
     localStorage.removeItem("token")
 
@@ -56,6 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        updateUser,
         loading,
         login,
         register,

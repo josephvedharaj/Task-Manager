@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (loading) return <Spinner fullScreen/>
 
-  if (!user) return <Navigate to="/login" />
+  if (!user) return <Navigate to="/login" replace/>
 
   return children
 }

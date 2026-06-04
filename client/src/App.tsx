@@ -3,8 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import DashboardPage from "./pages/DashboardPage"
-import CreateTaskPage from "./pages/CreateTaskPage"
 import ProtectedRoute from "./routes/ProtectedRoute"
+import EditProfilePage from "./pages/EditProfilePage"
+import AddTaskPage from "./pages/CreateTaskPage"
 
 import "./App.css"
 
@@ -26,7 +27,16 @@ function App() {
           path="/tasks/create"
           element={
             <ProtectedRoute>
-              <CreateTaskPage />
+              <AddTaskPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/edit-profile"
+          element={
+            <ProtectedRoute>
+              <EditProfilePage />
             </ProtectedRoute>
           }
         />

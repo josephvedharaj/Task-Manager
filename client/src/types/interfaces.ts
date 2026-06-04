@@ -2,12 +2,17 @@ export interface User {
   _id: string
   name: string
   email: string
+  profileImage: string
+  gender: string
+  dob: Date
+  phoneNumber: string
   createdAt: string
   updatedAt: string
 }
 
 export interface AuthContextType {
   user: User | null
+  updateUser: (data: User) => void
   loading: boolean
   login: (data: LoginData) => Promise<void>
   register: (data: RegisterData) => Promise<void>
@@ -71,11 +76,14 @@ export interface TaskCardProps {
 }
 
 export interface TaskFormProps {
-  onTaskCreated: (task: Task) => void
+  onTaskCreated: () => void
+}
+
+export interface EditProfileFormProps {
+  onProfileEdited: () => void
 }
 
 export interface DeleteModalProps {
-  isOpen: boolean
   onClose: () => void
   onConfirm: () => void
 }

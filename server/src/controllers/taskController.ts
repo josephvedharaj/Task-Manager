@@ -6,24 +6,25 @@ import Task from "../models/Task"
 import { CreateTaskBody, UpdateTaskBody } from "../types/interfaces"
 
 export const createTask = asyncHandler(async (req: Request, res: Response) => {
-    const { title, description, status, deadline } = req.body as CreateTaskBody
+  const { title, description, status, deadline } = req.body as CreateTaskBody
 
-    const task = await Task.create({
-      title,
-      description,
-      status,
-      deadline,
-      user: req.user?._id
-    })
+  const task = await Task.create({
+    title,
+    description,
+    status,
+    deadline,
+    user: req.user?._id
+  })
 
-    res.status(201).json(task)
-  }
-)
+  res.status(201).json(task)
+})
 
 export const getTasks = asyncHandler(async (req: Request, res: Response) => {
   const search = req.query.search?.toString() || ""
+
   const sort = req.query.sort?.toString() || "latest-created"
-  const status = req.query.status?.toString()
+
+  const statusQuery = req.query.status?.toString()
 
   const query: any = {
     user: req.user?._id,
@@ -33,8 +34,11 @@ export const getTasks = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 
-  if (status) {
-    query.status = status
+  if (statusQuery) {
+    const statusArray = statusQuery.split(",")
+    query.status = {
+      $in: statusArray
+    }
   }
 
   let sortOption = {}
@@ -45,7 +49,7 @@ export const getTasks = asyncHandler(async (req: Request, res: Response) => {
         createdAt: -1
       }
       break
-    
+
     case "oldest-created":
       sortOption = {
         createdAt: 1
@@ -63,27 +67,34 @@ export const getTasks = asyncHandler(async (req: Request, res: Response) => {
         updatedAt: 1
       }
       break
-    
+
     default:
       const tasks = await Task.aggregate([
-        {$match: query},
-        {
-          $addFields: {
-            completedOrder: {
-              $cond: [{$eq: ["$status", "completed"]}, 1, 0]
+          {
+            $match: query
+          },
+          {
+            $addFields: {
+              completedOrder: {
+                $cond: [
+                  {
+                    $eq: ["$status", "completed"]
+                  }, 1, 0
+                ]
+              }
+            }
+          },
+          {
+            $sort: {
+              completedOrder: 1,
+              deadline: 1
             }
           }
-        },
-        {
-          $sort: {
-            completedOrder: 1,
-            deadline: 1
-          }
-        }
-      ])
+        ])
 
-    res.json(tasks)
-    return
+      res.json(tasks)
+
+      return
   }
 
   const tasks = await Task.find(query).sort(sortOption)
@@ -92,61 +103,54 @@ export const getTasks = asyncHandler(async (req: Request, res: Response) => {
 })
 
 export const getTaskById = asyncHandler(async (req: Request, res: Response) => {
-    const task = await Task.findOne({
-      _id: req.params.id,
-      user: req.user?._id
-    })
+  const task = await Task.findOne({
+    _id: req.params.id,
+    user: req.user?._id
+  })
 
-    // const task = await Task.findById(req.params.id)
-
-    if (!task) {
-      res.status(404)
-      throw new Error("Task not found")
-    }
-
-    res.json(task)
+  if (!task) {
+    res.status(404)
+    throw new Error("Task not found")
   }
-)
+
+  res.json(task)
+})
 
 export const updateTask = asyncHandler(async (req: Request, res: Response) => {
-    const updates = req.body as UpdateTaskBody
+  const updates = req.body as UpdateTaskBody
 
-    const updatedTask = await Task.findOneAndUpdate(
-        {
-          _id: req.params.id,
-          user: req.user?._id
-        },
-        updates,
-        {
-          new: true,
-          runValidators: true
-        }
-      )
+  const updatedTask = await Task.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        user: req.user?._id
+      },
+      updates,
+      {
+        new: true,
+        runValidators: true
+      }
+    )
 
-    if (!updatedTask) {
-      res.status(404)
-      throw new Error("Task not found")
-    }
-
-    res.json(updatedTask)
+  if (!updatedTask) {
+    res.status(404)
+    throw new Error("Task not found")
   }
-)
+
+  res.json(updatedTask)
+})
 
 export const deleteTask = asyncHandler(async (req: Request, res: Response) => {
-    const deletedTask = await Task.findOneAndDelete({
-      _id: req.params.id,
-      user: req.user?._id
-    })
+  const deletedTask = await Task.findOneAndDelete({
+    _id: req.params.id,
+    user: req.user?._id
+  })
 
-    // const deletedTask = await Task.findByIdAndDelete(req.params.id)
-
-    if (!deletedTask) {
-      res.status(404)
-      throw new Error("Task not found")
-    }
-
-    res.json({
-      message: "Task deleted successfully"
-    })
+  if (!deletedTask) {
+    res.status(404)
+    throw new Error("Task not found")
   }
-)
+
+  res.json({
+    message: "Task deleted successfully"
+  })
+})

@@ -6,6 +6,10 @@ export interface IUser extends Document {
   name: string
   email: string
   password: string
+  profileImage: string
+  gender: string
+  dob: Date | null
+  phoneNumber: string
   createdAt: Date
   updatedAt: Date
 }

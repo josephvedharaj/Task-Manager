@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import Navbar from "../components/layout/Navbar"
 import TaskForm from "../components/tasks/TaskForm"
 
-const CreateTaskPage = () => {
+const AddTaskPage = () => {
   const navigate = useNavigate()
 
  return (
@@ -12,21 +12,21 @@ const CreateTaskPage = () => {
     <main className="p-6">
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Create Task</h1>
+          <h1 className="text-2xl font-bold">Add Task</h1>
 
           <button
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/", {replace: true})}
             className="bg-gray-300 px-4 py-2 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-300"
           >
             Cancel
           </button>
         </div>
-
-        <TaskForm onTaskCreated={() => {navigate("/dashboard")}}/>
+        
+        <TaskForm onTaskCreated={() => {navigate("/", {replace: true})}}/>
       </div>
     </main>
   </div>
 )
 }
 
-export default CreateTaskPage
+export default AddTaskPage

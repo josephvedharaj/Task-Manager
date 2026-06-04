@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import type { ChangeEvent } from "react"
+
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 
@@ -19,7 +20,7 @@ const DashboardPage = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
+  const [statusFilter, setStatusFilter] = useState<string[]>([])
   const [sort, setSort] = useState("priority")
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
@@ -28,17 +29,22 @@ const DashboardPage = () => {
 
   const handleEditTask = (task: Task) => {
     setSelectedTask(task)
+
     setEditModalOpen(true)
+  }
+
+  const handleStatusChange = (status: string) => {
+    setStatusFilter((prev) => prev.includes(status) ? prev.filter((item) => item !== status) : [...prev, status])
   }
 
   const fetchTasks = async () => {
     try {
       setLoading(true)
-      
-      const response =await api.get<Task[]>("/tasks", {
+
+      const response = await api.get<Task[]>("/tasks",{
         params: {
           search,
-          status: statusFilter,
+          status: statusFilter.join(","),
           sort
         }
       })
@@ -61,6 +67,7 @@ const DashboardPage = () => {
 
   const handleDeleteTask = (taskId: string) => {
     setSelectedTaskId(taskId)
+
     setDeleteModalOpen(true)
   }
 
@@ -79,47 +86,70 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 ">
+    <div className="min-h-screen bg-gray-100">
       <Navbar />
+
       <main className="p-6">
-        <div className="bg-white p-5 rounded-xl shadow mb-6 flex flex-col md:flex-row gap-4">
+        <div className="bg-white p-5 rounded-xl shadow mb-6 flex flex-col gap-4">
           <input
             type="text"
             placeholder="Search tasks..."
             value={search}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-            className="flex-1 border p-3 rounded-lg"
+            className="w-full border p-3 rounded-lg"
           />
 
-          <select
-            value={statusFilter}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => setStatusFilter(e.target.value)}
-            className="border p-3 rounded-lg"
-          >
-            <option value="">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="in-progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </select>
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+            <div className="flex flex-wrap items-center gap-3 border p-3 rounded-lg text-sm sm:text-base">
+              <label className="flex items-center gap-2 whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  checked={statusFilter.includes("pending")}
+                  onChange={() => handleStatusChange("pending")}
+                />
+                Pending
+              </label>
 
-          <select
-            value={sort}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => setSort(e.target.value)}
-            className="border p-3 rounded-lg"
-          >
-            <option value="priority">Priority</option>
-            <option value="latest-created">Latest Created</option>
-            <option value="oldest-created">Oldest Created</option>
-            <option value="latest-updated">Latest Updated</option>
-            <option value="oldest-updated">Oldest Updated</option>
-          </select>
+              <label className="flex items-center gap-2 whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  checked={statusFilter.includes("in-progress")}
+                  onChange={() => handleStatusChange("in-progress")}
+                />
+                In Progress
+              </label>
 
-          <button
-            onClick={() => navigate("/tasks/create")}
-            className="bg-black text-white px-5 py-3 rounded-lg whitespace-nowrap hover:bg-gray-300 hover:text-black transition-all duration-300"
-          >
-            Add Task
-          </button>
+              <label className="flex items-center gap-2 whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  checked={statusFilter.includes("completed")}
+                  onChange={() => handleStatusChange("completed")}
+                />
+                Completed
+              </label>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 flex-1">
+              <select
+                value={sort}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) => setSort(e.target.value)}
+                className="border p-3 rounded-lg flex-1"
+              >
+                <option value="priority">Priority</option>
+                <option value="latest-created">Latest Created</option>
+                <option value="oldest-created">Oldest Created</option>
+                <option value="latest-updated">Latest Updated</option>
+                <option value="oldest-updated">Oldest Updated</option>
+              </select>
+
+              <button
+                onClick={() =>navigate("/tasks/create")}
+                className="bg-black text-white px-5 py-3 rounded-lg whitespace-nowrap hover:bg-gray-700 transition-all duration-300"
+              >
+                Add Task
+              </button>
+            </div>
+          </div>
         </div>
 
         <h2 className="text-xl font-semibold mb-4">Your Tasks</h2>
@@ -138,7 +168,7 @@ const DashboardPage = () => {
             ))
           }
         </div>
-        
+
         {loading && (<Spinner />)}
       </main>
 
@@ -153,11 +183,14 @@ const DashboardPage = () => {
         )
       }
 
-      <DeleteModal
-        isOpen={deleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
-        onConfirm={confirmDeleteTask}
-      />
+      {
+        deleteModalOpen && (
+          <DeleteModal
+            onClose={() => setDeleteModalOpen(false)}
+            onConfirm={confirmDeleteTask}
+          />
+        )
+      }
     </div>
   )
 }
